@@ -17,4 +17,9 @@ public class Plant extends Lifeform implements EdibleByHerbivore {
     public String toString() {
         return "Plant";
     }
+
+    @Override
+    public void live(Cell home, Cell target) {
+
+    }
 }

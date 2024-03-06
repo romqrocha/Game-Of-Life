@@ -6,6 +6,9 @@ public abstract class Lifeform {
     /** The colour representing this Lifeform. */
     protected Color colour;
 
+    /** Determines whether this Lifeform can still take actions in this turn. */
+    protected boolean canAct = true;
+
     /** How nutritious this Lifeform is. */
     protected int nutritionValue;
 
@@ -41,6 +44,8 @@ public abstract class Lifeform {
         return chosenCell;
     }
 
+    public abstract void live(Cell home, Cell target);
+
     /**
      * Checks if this Lifeform can eat the given Lifeform.
      * @param target The Lifeform that may or may not be edible by this Lifeform.
@@ -62,6 +67,22 @@ public abstract class Lifeform {
      */
     protected void setColour(Color colour) {
         this.colour = colour;
+    }
+
+    /**
+     * Returns whether this Lifeform can still take actions in this turn.
+     * @return True if this Lifeform can still take actions in this turn.
+     */
+    public boolean canAct() {
+        return canAct;
+    }
+
+    /**
+     * Sets whether this Lifeform can still take actions in this turn.
+     * @param canAct Whether this Lifeform can still take actions this turn.
+     */
+    protected void setCanAct(boolean canAct) {
+        this.canAct = canAct;
     }
 
     /**
@@ -109,4 +130,6 @@ public abstract class Lifeform {
      */
     @Override
     public abstract String toString();
+
+
 }

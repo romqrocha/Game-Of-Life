@@ -1,4 +1,5 @@
 import java.awt.Color;
+import java.util.function.Function;
 
 public class World {
 
@@ -70,7 +71,7 @@ public class World {
                 currCell = cells[r][c];
 
                 currLife = currCell.getLifeform();
-                if (currLife == null) {
+                if (currLife == null || !currLife.canAct()) {
                     continue;
                 }
                 System.out.println(currLife); //
@@ -82,13 +83,34 @@ public class World {
                     System.out.println("stays home"); //
                 } else {
                     System.out.println("eats " + chosenCell.getLifeform() + " " + chosenCell.getId()); //
-                    moveLifeform(currCell, chosenCell);
+                    currLife.live(currCell, chosenCell);
                 }
 
+                currLife.setCanAct(false);
+            }
+        }
 
+        finalizeTurn();
+    }
+
+    /**
+     * Finalizes the current turn by allowing all existing Lifeforms to act
+     * again.
+     */
+    private void finalizeTurn() {
+        Lifeform currLife;
+
+        for (int r = 0; r < height; r++) {
+            for (int c = 0; c < length; c++) {
+                currLife = cells[r][c].getLifeform();
+
+                if (currLife != null) {
+                    currLife.setCanAct(true);
+                }
             }
         }
     }
+
 
     /**
      * Given a cell ID, returns all 8 cells around that cell.
@@ -126,14 +148,18 @@ public class World {
      * @param cell1 The Cell containing the Lifeform that should be moved.
      * @param cell2 The Cell that the Lifeform will move to.
      */
-    public void moveLifeform(Cell cell1, Cell cell2) {
+    public static void moveLifeform(Cell cell1, Cell cell2) {
         cell2.setLifeform(cell1.getLifeform());
         cell1.setLifeform(null);
     }
 
-
-    private void copyLifeform(int cell1Id, int cell2Id) {
-
+    /**
+     * Clones a Lifeform from one Cell to another. Cloning implies reproduction.
+     * @param cell1 The Cell containing the Lifeform that should be cloned.
+     * @param cell2 The Cell where the clone should appear.
+     */
+    private static void cloneLifeform(Cell cell1, Cell cell2) {
+        cell2.setLifeform(cell1.getLifeform());
     }
 
 }

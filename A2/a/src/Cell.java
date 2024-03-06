@@ -73,4 +73,12 @@ public class Cell {
         }
         return lifeform;
     }
+
+    /**
+     * Returns true if there is no Lifeform in this Cell.
+     * @return True if there is no Lifeform in this Cell.
+     */
+    public boolean isEmpty() {
+        return life == null;
+    }
 }

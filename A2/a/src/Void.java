@@ -13,6 +13,11 @@ public class Void extends Lifeform {
     }
 
     @Override
+    public void live(Cell home, Cell target) {
+
+    }
+
+    @Override
     protected boolean canEat(Lifeform target) {
         return false;
     }
