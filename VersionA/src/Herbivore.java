@@ -1,7 +1,6 @@
 import java.awt.Color;
-import java.util.function.BiFunction;
 
-public class Herbivore extends Lifeform {
+public class Herbivore extends Lifeform implements EdibleByHerbivore {
 
     public Herbivore() {
         setColour(Color.YELLOW);
@@ -38,5 +37,10 @@ public class Herbivore extends Lifeform {
 
         // Move
         World.moveLifeform(home, target);
+    }
+
+    @Override
+    public Herbivore getNewChild() {
+        return new Herbivore();
     }
 }

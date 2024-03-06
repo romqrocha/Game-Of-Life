@@ -22,4 +22,9 @@ public class Plant extends Lifeform implements EdibleByHerbivore {
     public void live(Cell home, Cell target) {
 
     }
+
+    @Override
+    public Plant getNewChild() {
+        return new Plant();
+    }
 }

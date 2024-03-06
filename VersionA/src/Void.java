@@ -26,4 +26,9 @@ public class Void extends Lifeform {
     public String toString() {
         return "Void";
     }
+
+    @Override
+    public Void getNewChild() {
+        return new Void();
+    }
 }

@@ -7,7 +7,7 @@ public abstract class Lifeform {
     protected Color colour;
 
     /** Determines whether this Lifeform can still take actions in this turn. */
-    protected boolean canAct = true;
+    protected boolean canAct;
 
     /** How nutritious this Lifeform is. */
     protected int nutritionValue;
@@ -131,5 +131,5 @@ public abstract class Lifeform {
     @Override
     public abstract String toString();
 
-
+    public abstract Lifeform getNewChild();
 }

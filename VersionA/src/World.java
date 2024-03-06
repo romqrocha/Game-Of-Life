@@ -1,5 +1,4 @@
 import java.awt.Color;
-import java.util.function.Function;
 
 public class World {
 
@@ -61,6 +60,8 @@ public class World {
      * to take their usual actions.
      */
     public void progress() {
+        refreshActions();
+
         Cell currCell;
         Cell[] currNeighbours;
         Lifeform currLife;
@@ -89,15 +90,12 @@ public class World {
                 currLife.setCanAct(false);
             }
         }
-
-        finalizeTurn();
     }
 
     /**
-     * Finalizes the current turn by allowing all existing Lifeforms to act
-     * again.
+     * Allow all Lifeforms in this World to act again.
      */
-    private void finalizeTurn() {
+    private void refreshActions() {
         Lifeform currLife;
 
         for (int r = 0; r < height; r++) {
@@ -154,12 +152,15 @@ public class World {
     }
 
     /**
-     * Clones a Lifeform from one Cell to another. Cloning implies reproduction.
+     * Clones a Lifeform from one Cell to another. Since cloning implies
+     * reproduction, the clone will have a new reference and fresh attributes.
      * @param cell1 The Cell containing the Lifeform that should be cloned.
      * @param cell2 The Cell where the clone should appear.
      */
-    private static void cloneLifeform(Cell cell1, Cell cell2) {
-        cell2.setLifeform(cell1.getLifeform());
+    public static void cloneLifeform(Cell cell1, Cell cell2) {
+        cell2.setLifeform(cell1.getLifeform().getNewChild());
     }
+
+
 
 }
