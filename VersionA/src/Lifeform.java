@@ -19,32 +19,11 @@ public abstract class Lifeform {
     protected int hunger;
 
     /**
-     * Chooses one Cell to move to, out of an array of neighbouring cells.
-     * Lifeforms can only move to cells that are "edible", as specified by
-     * their <code>canEat()</code> method.
-     * @param neighbours The options that this Lifeform can choose from.
-     * @return The Cell that this Lifeform chose to move to.
+     * Defines the pattern of actions that this Lifeform takes during its turn.
+     * @param home The Cell that contains this Lifeform.
+     * @param neighbours The Cells neighbouring this Lifeform.
      */
-    public Cell chooseMove(Cell[] neighbours) {
-        ArrayList<Cell> possibleMoves = new ArrayList<>();
-        for (Cell cell : neighbours) {
-            if (this.canEat(cell.getLifeform())) {
-                possibleMoves.add(cell);
-            }
-        }
-
-        Cell chosenCell;
-        if (possibleMoves.isEmpty()) {
-            chosenCell = null;
-        } else {
-            int chosenIndex = RandomGenerator.nextNumber(possibleMoves.size());
-            chosenCell = possibleMoves.get(chosenIndex);
-        }
-
-        return chosenCell;
-    }
-
-    public abstract void live(Cell home, Cell target);
+    public abstract void live(Cell home, Cell[] neighbours);
 
     /**
      * Checks if this Lifeform can eat the given Lifeform.
@@ -52,6 +31,23 @@ public abstract class Lifeform {
      * @return True if the given Lifeform is edible by this Lifeform.
      */
     protected abstract boolean canEat(Lifeform target);
+
+    /**
+     * Returns a String representation of this Lifeform.<br>
+     * The format should be: "Name" or "Name | Hunger: X"<br>
+     * Example 1: "Herbivore | Hunger: 0"<br>
+     * Example 2: "Plant"
+     * @return A String representation of this Lifeform.
+     */
+    @Override
+    public abstract String toString();
+
+    /**
+     * Returns a new Lifeform of this type. The new Lifeform is implied to
+     * be the child of this Lifeform.
+     * @return A new Lifeform of this type.
+     */
+    public abstract Lifeform getNewChild();
 
     /**
      * Returns the colour of this Lifeform.
@@ -68,6 +64,8 @@ public abstract class Lifeform {
     protected void setColour(Color colour) {
         this.colour = colour;
     }
+
+
 
     /**
      * Returns whether this Lifeform can still take actions in this turn.
@@ -122,14 +120,37 @@ public abstract class Lifeform {
     }
 
     /**
-     * Returns a String representation of this Lifeform.<br>
-     * The format should be: "Name" or "Name | Hunger: X"<br>
-     * Example 1: "Herbivore | Hunger: 0"<br>
-     * Example 2: "Plant"
-     * @return A String representation of this Lifeform.
+     * Increases this Lifeform's hunger by 1.
+     * Ordinarily, this method is called at the beginning of a turn.
      */
-    @Override
-    public abstract String toString();
+    protected void increaseHunger() {
+        hunger++;
+    }
 
-    public abstract Lifeform getNewChild();
+    /**
+     * Chooses one Cell to move to, out of an array of neighbouring cells.
+     * Lifeforms can only move to cells that are "edible", as specified by
+     * their <code>canEat()</code> method.
+     * @param neighbours The options that this Lifeform can choose from.
+     * @return The Cell that this Lifeform chose to move to.
+     */
+    protected Cell chooseMove(Cell[] neighbours) {
+        ArrayList<Cell> possibleMoves = new ArrayList<>();
+        for (Cell cell : neighbours) {
+            if (this.canEat(cell.getLifeform())) {
+                possibleMoves.add(cell);
+            }
+        }
+
+        Cell chosenCell;
+        if (possibleMoves.isEmpty()) {
+            chosenCell = null;
+        } else {
+            int chosenIndex = RandomGenerator.nextNumber(possibleMoves.size());
+            chosenCell = possibleMoves.get(chosenIndex);
+        }
+
+        return chosenCell;
+    }
+
 }

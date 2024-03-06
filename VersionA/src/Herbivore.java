@@ -1,5 +1,8 @@
 import java.awt.Color;
 
+/**
+ * A herbivore moves around the game board and eats plants.
+ */
 public class Herbivore extends Lifeform implements EdibleByHerbivore {
 
     public Herbivore() {
@@ -14,33 +17,40 @@ public class Herbivore extends Lifeform implements EdibleByHerbivore {
     }
 
     @Override
-    public String toString() {
-        return "Herbivore | Hunger: " + hunger;
-    }
+    public void live(Cell home, Cell[] neighbours) {
+        // Choose cell
+        Cell target = chooseMove(neighbours);
 
-    @Override
-    public void live(Cell home, Cell target) {
-        // Update hunger
-        int food;
-        if (target.isEmpty()) {
-            food = -1;
-        } else {
-            food = target.getLifeform().getNutritionValue();
-        }
-        hunger = Math.max(hunger - food, 0);
-
-        // Check hunger
-        if (hunger > hungerLimit) {
-            home.setLifeform(null);
+        // Exit if there are no available moves
+        if (target == null) {
             return;
         }
 
-        // Move
+        // Eat target if it is not empty
+        boolean foundFood = !target.isEmpty();
+        if (foundFood) {
+            int food = target.getLifeform().getNutritionValue();
+            hunger = Math.max(hunger - food, 0);
+        }
+
+        // Move into the target cell
         World.moveLifeform(home, target);
+        home = target;
+
+        // Check hunger, die if above limit
+        if (hunger > hungerLimit) {
+            home.setLifeform(null);
+        }
+
     }
 
     @Override
     public Herbivore getNewChild() {
         return new Herbivore();
+    }
+
+    @Override
+    public String toString() {
+        return "Herbivore | Hunger: " + hunger;
     }
 }

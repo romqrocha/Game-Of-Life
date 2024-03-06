@@ -1,8 +1,5 @@
 public class Main {
 
-    /** The Game controlled by this Main class. */
-    private static Game game;
-
     /**
      * Entry point of the game.
      * @param args Unused.
@@ -13,6 +10,6 @@ public class Main {
 
     /** Creates a Game object. */
     private static void createGame() {
-        game = new Game();
+        new Game();
     }
 }

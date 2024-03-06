@@ -3,13 +3,13 @@ import java.awt.Color;
 public class World {
 
     /** The cells that make up this World. */
-    private Cell[][] cells;
+    private final Cell[][] cells;
 
     /** The height of this World, in cells. */
-    private int height;
+    private final int height;
 
     /** The length of this World, in cells. */
-    private int length;
+    private final int length;
 
     /**
      * Instantiates a World with random lifeforms.
@@ -26,7 +26,7 @@ public class World {
         int id;
         for (int r = 0; r < height; r++) {
             for (int c = 0; c < length; c++) {
-                seed = RandomGenerator.nextNumber(100); // 0-99
+                seed = 1 + RandomGenerator.nextNumber(100); // 1-100
                 id = r * length + c;
                 cells[r][c] = new Cell(seed, id);
             }
@@ -63,29 +63,23 @@ public class World {
         refreshActions();
 
         Cell currCell;
-        Cell[] currNeighbours;
         Lifeform currLife;
-        Cell chosenCell;
+        Cell[] currNeighbours;
 
         for (int r = 0; r < height; r++) {
             for (int c = 0; c < length; c++) {
                 currCell = cells[r][c];
-
                 currLife = currCell.getLifeform();
                 if (currLife == null || !currLife.canAct()) {
                     continue;
                 }
-                System.out.println(currLife); //
+
+                if (currLife.getHungerLimit() != -1) {
+                    currLife.increaseHunger();
+                }
 
                 currNeighbours = getAdjacentCells(currCell.getId());
-                chosenCell = currLife.chooseMove(currNeighbours);
-
-                if (chosenCell == null) {
-                    System.out.println("stays home"); //
-                } else {
-                    System.out.println("eats " + chosenCell.getLifeform() + " " + chosenCell.getId()); //
-                    currLife.live(currCell, chosenCell);
-                }
+                currLife.live(currCell, currNeighbours);
 
                 currLife.setCanAct(false);
             }
@@ -119,8 +113,6 @@ public class World {
         int row = cellId / length;
         int col = cellId % length;
 
-        System.out.println("at [" + row + "][" + col + "]"); //
-
         Cell[] adjacent = new Cell[8];
 
         int i = 0;
@@ -128,9 +120,7 @@ public class World {
             for (int dc = -1; dc <= 1; dc++) {
                 if (row + dr < 0 || row + dr >= height || col + dc < 0 || col + dc >= length) {
                     adjacent[i++] = new Cell(new Void());
-                } else if (dr == 0 && dc == 0) {
-                    continue;
-                } else {
+                } else if (!(dr == 0 && dc == 0)) {
                     adjacent[i++] = cells[row + dr][col + dc];
                 }
             }
@@ -160,7 +150,5 @@ public class World {
     public static void cloneLifeform(Cell cell1, Cell cell2) {
         cell2.setLifeform(cell1.getLifeform().getNewChild());
     }
-
-
 
 }

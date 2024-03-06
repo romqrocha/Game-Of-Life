@@ -2,6 +2,12 @@ public class Cell {
 
     /** The standard ID for inaccessible cells. */
     public static final int INACCESSIBLE_ID = -1;
+
+    /** The spawn rate of herbivores (%). */
+    public static final int SPAWN_RATE_HERBIVORE = 15;
+
+    /** The spawn rate of plants (%). */
+    public static final int SPAWN_RATE_PLANT = 20;
     
     /** The lifeform occupying this Cell. */
     private Lifeform life;
@@ -61,14 +67,11 @@ public class Cell {
      */
     private Lifeform chooseLifeform(int seed) {
         Lifeform lifeform;
-        if (seed >= 0 && seed < 15) {
+        if (seed >= (100 - SPAWN_RATE_HERBIVORE)) {
             lifeform = new Herbivore();
-        } else if (seed >= 15 && seed < 35) {
+        } else if (seed >= (100 - SPAWN_RATE_HERBIVORE - SPAWN_RATE_PLANT)) {
             lifeform = new Plant();
-        } else if (seed >= 35 && seed < 100) {
-            lifeform = null;
         } else {
-            // invalid input
             lifeform = null;
         }
         return lifeform;

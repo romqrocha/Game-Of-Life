@@ -52,7 +52,6 @@ public class Game {
 
     /** Simulates the next turn. */
     public void nextTurn() {
-        System.out.println("next turn");
         world.progress();
         window.updateColours(world.getColours());
     }

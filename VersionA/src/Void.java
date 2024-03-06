@@ -13,13 +13,16 @@ public class Void extends Lifeform {
     }
 
     @Override
-    public void live(Cell home, Cell target) {
-
+    protected boolean canEat(Lifeform target) {
+        return false;
     }
 
     @Override
-    protected boolean canEat(Lifeform target) {
-        return false;
+    public void live(Cell home, Cell[] neighbours) {}
+
+    @Override
+    public Void getNewChild() {
+        return new Void();
     }
 
     @Override
@@ -27,8 +30,4 @@ public class Void extends Lifeform {
         return "Void";
     }
 
-    @Override
-    public Void getNewChild() {
-        return new Void();
-    }
 }
