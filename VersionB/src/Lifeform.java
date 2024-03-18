@@ -72,8 +72,6 @@ public abstract class Lifeform {
         this.colour = colour;
     }
 
-
-
     /**
      * Returns whether this Lifeform can still take actions in this turn.
      * @return True if this Lifeform can still take actions in this turn.

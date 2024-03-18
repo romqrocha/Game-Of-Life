@@ -3,10 +3,13 @@ import java.awt.*;
 public class Plant extends Lifeform implements EdibleByHerbivore, EdibleByOmnivore {
 
     /** The minimum amount of nearby Plants for another Plant to reproduce. */
-    public static final int MIN_NEARBY_PLANTS = 2;
+    public static final int MIN_NEARBY_PLANTS = 1;
+
+    /** The maximum amount of nearby Plants for another Plant to reproduce */
+    public static final int MAX_NEARBY_PLANTS = 3;
 
     /** The minimum amount of nearby free space for a Plant to reproduce. */
-    public static final int MIN_FREE_SPACE = 3;
+    public static final int MIN_FREE_SPACE = 1;
 
     public Plant() {
         setColour(Color.GREEN);
@@ -32,7 +35,8 @@ public class Plant extends Lifeform implements EdibleByHerbivore, EdibleByOmnivo
             }
         }
 
-        return numOfPlants >= MIN_NEARBY_PLANTS && amtOfSpace >= MIN_FREE_SPACE;
+        return numOfPlants >= MIN_NEARBY_PLANTS && numOfPlants <= MAX_NEARBY_PLANTS
+                && amtOfSpace >= MIN_FREE_SPACE;
     }
 
     @Override

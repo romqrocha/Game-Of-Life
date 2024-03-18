@@ -5,15 +5,18 @@ public class Herbivore extends Lifeform implements EdibleByOmnivore, EdibleByCar
     /** The minimum amount of nearby Herbivores for another Herbivore to reproduce. */
     public static final int MIN_NEARBY_HERBIVORES = 1;
 
+    /** The maximum amount of nearby Herbivores for another Herbivore to reproduce. **/
+    public static final int MAX_NEARBY_HERBIVORES = 3;
+
     /** The minimum amount of nearby free space for a Herbivore to reproduce. */
-    public static final int MIN_FREE_SPACE = 2;
+    public static final int MIN_FREE_SPACE = 1;
 
     /** The minimum amount of nearby food for a Herbivore to reproduce. */
     public static final int MIN_NEARBY_FOOD = 2;
 
     public Herbivore() {
         setColour(Color.YELLOW);
-        setNutritionValue(4);
+        setNutritionValue(3);
         setHungerLimit(5);
     }
 
@@ -38,7 +41,7 @@ public class Herbivore extends Lifeform implements EdibleByOmnivore, EdibleByCar
             }
         }
 
-        return numOfHerbivores >= MIN_NEARBY_HERBIVORES
+        return numOfHerbivores >= MIN_NEARBY_HERBIVORES && numOfHerbivores <= MAX_NEARBY_HERBIVORES
                 && amtOfSpace >= MIN_FREE_SPACE
                 && amtOfFood >= MIN_NEARBY_FOOD;
     }
@@ -49,27 +52,25 @@ public class Herbivore extends Lifeform implements EdibleByOmnivore, EdibleByCar
         Cell target = chooseMove(neighbours);
 
         // Exit if there are no available moves
-        if (target == null) {
-            return;
-        }
+        if (target != null) {
+            // Eat target if it is not empty
+            boolean foundFood = !target.isEmpty();
+            if (foundFood) {
+                int food = target.getLifeform().getNutritionValue();
+                hunger = Math.max(hunger - food, 0);
+            }
 
-        // Eat target if it is not empty
-        boolean foundFood = !target.isEmpty();
-        if (foundFood) {
-            int food = target.getLifeform().getNutritionValue();
-            hunger = Math.max(hunger - food, 0);
-        }
+            if (canReproduce(neighbours)) {
+                // Clone into the target cell
+                World.cloneLifeform(home, target);
+            } else {
+                // Move into the target cell
+                World.moveLifeform(home, target);
+            }
 
-        if (canReproduce(neighbours)) {
-            // Clone into the target cell
-            World.cloneLifeform(home, target);
-        } else {
-            // Move into the target cell
-            World.moveLifeform(home, target);
+            // update home cell
+            home = target;
         }
-
-        // update home cell
-        home = target;
 
         // Check hunger, die if above limit
         if (hunger > hungerLimit) {

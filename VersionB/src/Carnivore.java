@@ -2,8 +2,11 @@ import java.awt.*;
 
 public class Carnivore extends Lifeform implements EdibleByOmnivore {
 
-    /** The minimum amount of nearby Carnivores for another Carnivores to reproduce. */
+    /** The minimum amount of nearby Carnivores for another Carnivore to reproduce. */
     public static final int MIN_NEARBY_CARNIVORES = 1;
+
+    /** The maximum amount of nearby Carnivores for another Carnivore to reproduce. */
+    public static final int MAX_NEARBY_CARNIVORES = 4;
 
     /** The minimum amount of nearby free space for a Carnivore to reproduce. */
     public static final int MIN_FREE_SPACE = 3;
@@ -13,7 +16,7 @@ public class Carnivore extends Lifeform implements EdibleByOmnivore {
 
     public Carnivore() {
         setColour(Color.RED);
-        setNutritionValue(5);
+        setNutritionValue(6);
         setHungerLimit(6);
     }
 
@@ -22,28 +25,26 @@ public class Carnivore extends Lifeform implements EdibleByOmnivore {
         // Choose cell
         Cell target = chooseMove(neighbours);
 
-        // Exit if there are no available moves
-        if (target == null) {
-            return;
-        }
+        // Skip if there are no available moves
+        if (target != null) {
+            // Eat target if it is not empty
+            boolean foundFood = !target.isEmpty();
+            if (foundFood) {
+                int food = target.getLifeform().getNutritionValue();
+                hunger = Math.max(hunger - food, 0);
+            }
 
-        // Eat target if it is not empty
-        boolean foundFood = !target.isEmpty();
-        if (foundFood) {
-            int food = target.getLifeform().getNutritionValue();
-            hunger = Math.max(hunger - food, 0);
-        }
+            if (canReproduce(neighbours)) {
+                // Clone into the target cell
+                World.cloneLifeform(home, target);
+            } else {
+                // Move into the target cell
+                World.moveLifeform(home, target);
+            }
 
-        if (canReproduce(neighbours)) {
-            // Clone into the target cell
-            World.cloneLifeform(home, target);
-        } else {
-            // Move into the target cell
-            World.moveLifeform(home, target);
+            // update home cell
+            home = target;
         }
-
-        // update home cell
-        home = target;
 
         // Check hunger, die if above limit
         if (hunger > hungerLimit) {
@@ -72,7 +73,7 @@ public class Carnivore extends Lifeform implements EdibleByOmnivore {
             }
         }
 
-        return numOfCarnivores >= MIN_NEARBY_CARNIVORES
+        return numOfCarnivores >= MIN_NEARBY_CARNIVORES && numOfCarnivores <= MAX_NEARBY_CARNIVORES
                 && amtOfSpace >= MIN_FREE_SPACE
                 && amtOfFood >= MIN_NEARBY_FOOD;
     }
