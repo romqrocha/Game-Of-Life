@@ -1,15 +1,12 @@
 import java.awt.*;
 
-/**
- * A plant cannot move, but can reproduce under the right conditions.
- */
 public class Plant extends Lifeform implements EdibleByHerbivore, EdibleByOmnivore {
 
     /** The minimum amount of nearby Plants for another Plant to reproduce. */
-    public static final int MIN_NEARBY_PLANTS = 1;
+    public static final int MIN_NEARBY_PLANTS = 2;
 
     /** The minimum amount of nearby free space for a Plant to reproduce. */
-    public static final int MIN_FREE_SPACE = 5;
+    public static final int MIN_FREE_SPACE = 3;
 
     public Plant() {
         setColour(Color.GREEN);
@@ -26,6 +23,7 @@ public class Plant extends Lifeform implements EdibleByHerbivore, EdibleByOmnivo
     public boolean canReproduce(Cell[] neighbours) {
         int numOfPlants = 0;
         int amtOfSpace = 0;
+
         for (Cell cell : neighbours) {
             if (cell.getLifeform() instanceof Plant) {
                 numOfPlants++;

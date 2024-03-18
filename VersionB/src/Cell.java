@@ -4,10 +4,16 @@ public class Cell {
     public static final int INACCESSIBLE_ID = -1;
 
     /** The spawn rate of herbivores (%). */
-    public static final int SPAWN_RATE_HERBIVORE = 15;
+    public static final int SPAWN_RATE_HERBIVORE = 20;
 
     /** The spawn rate of plants (%). */
     public static final int SPAWN_RATE_PLANT = 20;
+
+    /** The spawn rate of omnivores (%). */
+    public static final int SPAWN_RATE_OMNIVORE = 5;
+
+    /** The spawn rate of carnivores (%). */
+    public static final int SPAWN_RATE_CARNIVORE = 10;
     
     /** The lifeform occupying this Cell. */
     private Lifeform life;
@@ -63,17 +69,25 @@ public class Cell {
 
     /**
      * Helper method to choose a lifeform based on a random seed value.
+     * @param seed A random value to help choose a lifeform to return.
      * @return A lifeform.
      */
     private Lifeform chooseLifeform(int seed) {
         Lifeform lifeform;
-        if (seed >= (100 - SPAWN_RATE_HERBIVORE)) {
+        int remainingChance = 100;
+
+        if (seed >= (remainingChance -= SPAWN_RATE_HERBIVORE)) {
             lifeform = new Herbivore();
-        } else if (seed >= (100 - SPAWN_RATE_HERBIVORE - SPAWN_RATE_PLANT)) {
+        } else if (seed >= (remainingChance -= SPAWN_RATE_PLANT)) {
             lifeform = new Plant();
+        } else if (seed >= (remainingChance -= SPAWN_RATE_OMNIVORE)) {
+            lifeform = new Omnivore();
+        } else if (seed >= (remainingChance - SPAWN_RATE_CARNIVORE)) {
+            lifeform = new Carnivore();
         } else {
             lifeform = null;
         }
+
         return lifeform;
     }
 
