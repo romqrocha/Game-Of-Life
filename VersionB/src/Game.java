@@ -4,10 +4,10 @@ import java.awt.event.MouseListener;
 public class Game {
 
     /** The length of the world, in cells. */
-    public static final int WORLD_LENGTH = 25;
+    public static final int WORLD_LENGTH = 30;
 
     /** The height of the world, in cells. */
-    public static final int WORLD_HEIGHT = 25;
+    public static final int WORLD_HEIGHT = 30;
 
     /** The Window being used to display this Game. */
     private final Window window;

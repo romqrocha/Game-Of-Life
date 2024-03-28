@@ -16,7 +16,7 @@ public class Herbivore extends Lifeform implements EdibleByOmnivore, EdibleByCar
 
     public Herbivore() {
         setColour(Color.YELLOW);
-        setNutritionValue(3);
+        setNutritionValue(4);
         setHungerLimit(5);
     }
 
